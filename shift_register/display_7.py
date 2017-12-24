@@ -37,11 +37,12 @@ class Display7Ops:
         
 class Display7OpsThread(Thread):
     
-    def __init__(self, display_ops):
+    def __init__(self, display_ops, endless_count):
       Thread.__init__(self)
       self.__display_ops = display_ops
+      self.__endless_count = endless_count
       
     def run(self):
       print('Starting display thread.')
-      self.__display_ops.count(False)
+      self.__display_ops.count(self.__endless_count)
 

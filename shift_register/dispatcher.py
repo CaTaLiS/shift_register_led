@@ -34,8 +34,10 @@ class Dispatcher:
             self.display.count(False)
         elif args.count == 'all':
             print('Handling counting on LEDs and 7-segments display')
-            led_thread = LedOpsThread(self.led)
-            display_thread = Display7OpsThread(self.display)
+            led_thread = LedOpsThread(self.led, False)
+            led_thread.setDaemon(True)
+            display_thread = Display7OpsThread(self.display, False)
+            display_thread.setDaemon(True)
             led_thread.start()
             display_thread.start()
         elif args.endless == 'led':
@@ -46,8 +48,12 @@ class Dispatcher:
             self.display.count(True)
         elif args.endless == 'all':
             print('Handling endless counting on LEDs and 7-segments display')
-            self.led.count(True)
-            self.display.count(True)
+            led_thread = LedOpsThread(self.led, True)
+            led_thread.setDaemon(True)
+            display_thread = Display7OpsThread(self.display, True)
+            display_thread.setDaemon(True)
+            led_thread.start()
+            display_thread.start()
         elif args.input == 'led':
             print('Handling input mode on LEDs')
             self.led.show()
@@ -64,5 +70,7 @@ if __name__ == '__main__':
     dispatcher = Dispatcher()
     try:
         dispatcher.dispatch()
+        while threading.active_count() > 0:
+            time.sleep(0.1)
     except KeyboardInterrupt:
         dispatcher.cleanup()

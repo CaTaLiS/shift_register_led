@@ -36,11 +36,12 @@ class LedOps:
 
 class LedOpsThread(Thread):
     
-    def __init__(self, led_ops):
+    def __init__(self, led_ops, endless_count):
       Thread.__init__(self)
       self.__led_ops = led_ops
+      self.__endless_count = endless_count
       
     def run(self):
       print('Starting led thread.')
-      self.__led_ops.count(False)
+      self.__led_ops.count(self.__endless_count)
 
